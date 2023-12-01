@@ -9,6 +9,8 @@
 
 using namespace std;
 
+// dir == 1, search for numbers from the front of str
+// dir == -1, search for numbers from the back of str
 int find_num(string str, int dir) {
   static map<string,int> nummap;
   nummap["one"] = 1;
