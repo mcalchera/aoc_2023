@@ -30,6 +30,6 @@ int main (int argc, char ** argv) {
       total += first * 10 + last;
     }
   }
-  cout << total << endl;
+  cout << "Part 1: " << total << endl;
   return 0;
 }
