@@ -71,7 +71,7 @@ int main (int argc, char ** argv) {
     in.clear();
     in.seekg(0);
     while ( getline(in,str)) {
-      int first = find_num(str,1);
+      int first = find_num(str, 1);
       int last = find_num(str, -1);
       total2 += first * 10 + last;
     }
