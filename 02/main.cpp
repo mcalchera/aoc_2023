@@ -62,7 +62,11 @@ int main (int argc, char ** argv) {
   }
 
   cout << "Part 1: " << total << endl;
-
+  long total2 = 0;
+  for (auto game : games) {
+    total2 += game.red * game.blue * game.green;
+  };
+  cout << "Part 2: " << total2 << endl;
 
   return 0;
 }
