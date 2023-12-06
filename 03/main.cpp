@@ -60,21 +60,33 @@ bool is_part(vector<vector<char>> arr, int x, int y, int width) {
 int gear_ratio(vector<part> parts, coord pt) {
   vector<part> vec;
   for (auto part : parts) {
+    int min_x = part.location.x;
+    int max_x = part.location.x + part.length;
     //left
-    if (pt.y == part.location.y && pt.x == part.location.x + part.length) {
+    if (pt.y == part.location.y && pt.x == max_x) {
       vec.push_back(part);
     }
     //right
-    else if (pt.y == part.location.y && pt.x+1 == part.location.x) {
+    else if (pt.y == part.location.y && pt.x+1 == min_x) {
       vec.push_back(part);
     }
     //above
-    else if (pt.y - 1 == part.location.y && (pt.x >= part.location.x - 1 || pt.x <= part.location.x + part.length - 1)) {
-      vec.push_back(part);
+    else if (pt.y - 1 == part.location.y) {
+      for (int x = min_x; x < max_x; ++x) {
+        if (pt.x - 1 == x || pt.x == x || pt.x+1 == x) {
+          vec.push_back(part);
+          break;
+        }
+      }
     }
     //below
-    else if (pt.y + 1 == part.location.y && (pt.x >= part.location.x - 1 || pt.x <= part.location.x + part.length - 1)) {
-      vec.push_back(part);
+    else if (pt.y + 1 == part.location.y) {
+      for (int x = min_x; x < max_x; ++x) {
+        if (pt.x-1 == x || pt.x == x || pt.x+1 == x) {
+          vec.push_back(part);
+          break;
+        }
+      }
     }
   }
 
@@ -122,7 +134,9 @@ int main (int argc, char ** argv) {
         p.location = {i_start,i};
         p.length = tmp.size();
 
-        parts.push_back(p);
+        if (p.is_part) {
+          parts.push_back(p);
+        }
       }
       else {
         ++index;
@@ -133,7 +147,7 @@ int main (int argc, char ** argv) {
   for (int i = 0; i < schematic.size(); ++i) {
     for (int j = 0; j < schematic[i].size(); ++j) {
       if (schematic[i][j] == '*') {
-        coord pt = {i,j};
+        coord pt = {j,i};
         coords.push_back(pt);
       }
     }
@@ -144,7 +158,7 @@ int main (int argc, char ** argv) {
     part1 += (part.is_part) ? part.num : 0;
   }
 
-  long part2;
+  long part2 = 0;
   // loop through * and find parts that 
   for (auto coord: coords) {
     part2 += gear_ratio(parts, coord);
