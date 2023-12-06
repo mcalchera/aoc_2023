@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
-
+#include <chrono>
 #include "../include/args.h"
 
 
@@ -98,7 +98,8 @@ int gear_ratio(vector<part> parts, coord pt) {
 }
 int main (int argc, char ** argv) {
   process_args(argc, argv);
-
+  
+  auto start = chrono::high_resolution_clock::now();
   vector<vector<char>> schematic;
   vector<part> parts;
   vector<coord> coords;
@@ -165,5 +166,9 @@ int main (int argc, char ** argv) {
   }
   cout << "Part 1: " << part1 << endl;
   cout << "Part 2: " << part2 << endl;
+
+  auto end = chrono::high_resolution_clock::now();
+  auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
+  cout << "Clock time: " << duration.count() << " ms" << endl;
   return 0;
 }
