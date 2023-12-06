@@ -27,16 +27,6 @@ int calculate_score(vector<int> winners, vector<int> card, int &num_winners) {
   return 0;
 }
 
-int count_winners(vector<int> winners, vector<int> card) {
-  sort(winners.begin(), winners.end());
-  sort(card.begin(), card.end());
-  vector<int> intersection;
-  set_intersection(winners.begin(), winners.end(),
-                   card.begin(), card.end(),
-                   back_inserter(intersection));
-  return intersection.size();
-}
-
 int main (int argc, char ** argv) {
   process_args(argc, argv);
   auto start = chrono::high_resolution_clock::now();
