@@ -11,6 +11,6 @@ int main (int argc, char ** argv) {
 
   auto end = chrono::high_resolution_clock::now();
   auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-  cout << "Clock time: " << duration.count() << " us" << endl;
+  cout << "Clock time: " << duration.count() << " ms" << endl;
   return 0;
 }
