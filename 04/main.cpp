@@ -12,7 +12,7 @@
 
 using namespace std;
 
-int calculate_score(vector<int> winners, vector<int> card) {
+int calculate_score(vector<int> winners, vector<int> card, int &num_winners) {
   sort(winners.begin(), winners.end());
   sort(card.begin(), card.end());
   vector<int> intersection;
@@ -20,17 +20,30 @@ int calculate_score(vector<int> winners, vector<int> card) {
                    card.begin(), card.end(),
                    back_inserter(intersection));
 
-  if (intersection.size() > 0 ) {
-    return pow(2, intersection.size() - 1);
+  num_winners = intersection.size();
+  if (num_winners > 0 ) {
+    return pow(2, num_winners - 1);
   }
   return 0;
+}
+
+int count_winners(vector<int> winners, vector<int> card) {
+  sort(winners.begin(), winners.end());
+  sort(card.begin(), card.end());
+  vector<int> intersection;
+  set_intersection(winners.begin(), winners.end(),
+                   card.begin(), card.end(),
+                   back_inserter(intersection));
+  return intersection.size();
 }
 
 int main (int argc, char ** argv) {
   process_args(argc, argv);
   auto start = chrono::high_resolution_clock::now();
   int part1 = 0;
+  int part2 = 0;
   map<int,int> winner_list;
+  map<int,int> num_cards;
   vector<string> cards;
   ifstream in(argv[1]);
 
@@ -42,6 +55,7 @@ int main (int argc, char ** argv) {
     }
     // part 1
     for (auto line : cards) {
+      ++line_num;
       vector<int> winners;
       vector<int> nums;
       string tmp;
@@ -58,15 +72,26 @@ int main (int argc, char ** argv) {
       while (ss >> tmp) {
         nums.push_back(stoi(tmp));
       }
-      int line_score = calculate_score(winners,nums);
+      int num_winners = 0;
+      int line_score = calculate_score(winners,nums, num_winners);
       part1 += line_score;
-      winner_list[line_num] = line_score; 
+      winner_list[line_num] = num_winners;
+      num_cards[line_num] = 1; 
     }
+    for (int i = 1; i <= line_num; ++i) {
+      for (int j = i+1; j <= i + winner_list[i]; ++j) {
+        num_cards[j] += num_cards[i];
+      }
+    }
+  }
+  for (auto it = num_cards.begin(); it != num_cards.end(); ++it) {
+    part2 += it->second;
   }
 
   auto end = chrono::high_resolution_clock::now();
   auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
   cout << "Part 1: " << part1 << endl;
+  cout << "Part 2: " << part2 << endl;
   cout << "Clock time: " << duration.count() << " ms" << endl;
   return 0;
 }
