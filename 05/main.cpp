@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <limits>
 #include "../include/args.h"
 
 using namespace std;
@@ -123,7 +124,23 @@ int main (int argc, char ** argv) {
     locations.push_back(part1(maps, seed));
   }
 
+  // Part 2
+  for (int i = 0; i < seeds.size() - 1; ++i) {
+    Seed seed = { seeds[i], seeds[i+1] };
+    seeds2.push_back(seed);
+    ++i;
+  }
+
+  long part2 = numeric_limits<long>::max();
+  for (auto seed : seeds2) {
+    for (auto i = 0; i < seed.size; i++) {
+      long loc = part1(maps, seed.start + i);
+      part2 = loc < part2 ? loc : part2;
+    }
+  }
+
   cout << "Part 1: " << *min_element(locations.begin(), locations.end()) << endl;
+  cout << "Part 2: " << part2 << endl;
   auto end = chrono::high_resolution_clock::now();
   auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
   cout << "Clock time: " << duration.count() << " ms" << endl;
