@@ -40,15 +40,16 @@ long process_line2(string line) {
 
   return stol(val);
 }
+
 /*
  * x(t-x) > d // t = time of race, x = how long button held, d = dist
- *  x^2 -tx + d < 0
- *  min = (t - sqrt(t^2 - 4d))/2
- *  max = (t + sqrt(t^2 - 4d))/2
  *
+ * x^2 -tx + d < 0
+ *
+ * min_x = (t - sqrt(t^2 - 4d))/2
+ * max_x = (t + sqrt(t^2 - 4d))/2
  *
  */
-
 long get_wins(Race r) {
   long double t = static_cast<long double>(r.time);
   long double d = static_cast<long double>(r.dist);
