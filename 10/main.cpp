@@ -34,6 +34,7 @@ bool is_traversible(vector<vector<char>> grid, coord start, coord next) {
     return false;
   }
   char c_next = grid[y][x];
+  char c_start = grid[start.y][start.x];
   switch (c_next) {
     case '|':
       return (x == start.x);
@@ -42,16 +43,16 @@ bool is_traversible(vector<vector<char>> grid, coord start, coord next) {
       return (y == start.y);
       break;
     case 'L':
-      return (x < start.x && y == start.y) || (y > start.y && x == start.x);
+      return (x < start.x && y == start.y) || (y > start.y && x == start.x && c_start != '-');
       break;
     case 'J':
-      return (x > start.x && y == start.y) || (y > start.y && x == start.x);
+      return (x > start.x && y == start.y) || (y > start.y && x == start.x && c_start != '-');
       break;
     case '7':
-      return (x > start.x && y == start.y) || (y < start.y && x == start.x);
+      return (x > start.x && y == start.y && c_start != '|') || (y < start.y && x == start.x);
       break;
     case 'F':
-      return (y < start.y && x == start.x) || (y == start.y && x < start.x);
+      return (y < start.y && x == start.x && c_start != '|') || (y == start.y && x < start.x);
       break;
     case 'S':
       return true;
@@ -61,7 +62,7 @@ bool is_traversible(vector<vector<char>> grid, coord start, coord next) {
   }  
 }
 
-coord travel(vector<vector<char>> grid, coord start, coord prev) {
+coord travel(vector<vector<char>> grid, coord start, coord & prev) {
   vector<coord> vec;
   vec.push_back({ start.x, start.y-1 });
   vec.push_back({ start.x, start.y+1 });
@@ -74,10 +75,23 @@ coord travel(vector<vector<char>> grid, coord start, coord prev) {
       continue;
     }
     if (is_traversible(grid, start, dir)) {
+      prev = start;
       return dir;
     }
   }
   return { 0, 0 }; // shouldn't hit this
+}
+// For debugging
+void print_grid(vector<vector<char>> grid, coord c1, coord c2) {
+  grid[c1.y][c1.x] = '#';
+  grid[c2.y][c2.x] = '#';
+
+  for (int y = 0; y < grid.size(); ++y) {
+    for (int x = 0; x < grid[y].size(); ++x) {
+      cout << grid[y][x];
+    }
+    cout << endl;
+  }
 }
 
 int main (int argc, char ** argv) {
@@ -136,9 +150,12 @@ int main (int argc, char ** argv) {
   coord dir0 = dirs[0];
   coord dir1 = dirs[1];
   while (dir0 != dir1) {
+    //print_grid(grid, dir0, dir1);
     dir0 = travel(grid, dir0, prev0);
     dir1 = travel(grid, dir1, prev1);
+    
     ++part1;
+
   } 
 
   cout << "Part 1: " << part1 << endl;
