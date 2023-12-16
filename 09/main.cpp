@@ -9,6 +9,37 @@
 
 using namespace std;
 
+int solve(vector<vector<int>> lines) {
+  int val = 0;
+  for (auto nums : lines) {
+    vector<int> solution;
+    solution.push_back(nums.back());
+    while (nums.size() > 0) {
+      for (int i = 0; i < nums.size()-1; ++i) {
+        nums[i] = nums [i+1] - nums[i];
+      }
+      nums.pop_back();
+      solution.push_back(nums.back());
+
+      bool is_zeroes = true;
+
+      for (int n : nums) {
+        if (n != 0) {
+          is_zeroes = false;
+          break;
+        }
+      }
+      if (is_zeroes) {
+        break;
+      }
+    }
+    for (int n : solution) {
+      val += n;
+    }
+  }
+  return val;
+}
+
 int main (int argc, char ** argv) {
   process_args(argc, argv);
   auto start = chrono::high_resolution_clock::now();
@@ -37,35 +68,14 @@ int main (int argc, char ** argv) {
   }
 
   in.close();
-
-  for (auto nums : lines) {
-    vector<int> solution;
-    solution.push_back(nums.back());
-    while (nums.size() > 0) {
-      for (int i = 0; i < nums.size()-1; ++i) {
-        nums[i] = nums [i+1] - nums[i];
-      }
-      nums.pop_back();
-      solution.push_back(nums.back());
-
-      bool is_zeroes = true;
-
-      for (int n : nums) {
-        if (n != 0) {
-          is_zeroes = false;
-          break;
-        }
-      }
-      if (is_zeroes) {
-        break;
-      }
-    }
-    for (int n : solution) {
-      part1 += n;
-    }
-  }
+  
+  // part 1
+  part1 = solve(lines);
+  //part 2
+  part2 = solve(reverse_lines);
   
   cout << "Part 1: " << part1 << endl;
+  cout << "Part 2: " << part2 << endl;
   auto end = chrono::high_resolution_clock::now();
   auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
   cout << "Clock time: " << duration.count() << " ms" << endl;
