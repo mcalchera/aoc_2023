@@ -37,22 +37,28 @@ bool is_traversible(vector<vector<char>> grid, coord start, coord next) {
   char c_start = grid[start.y][start.x];
   switch (c_next) {
     case '|':
-      return (x == start.x);
+      return (y < start.y && x == start.x && c_start != '-' && c_start != 'F' && c_start != '7') ||
+             (y > start.y && x == start.x && c_start != '-' && c_start != 'J' && c_start != 'L');
       break;
     case '-':
-      return (y == start.y);
+      return (x > start.x && y == start.y && c_start != '|' && c_start != 'J' && c_start != '7') ||
+             (x < start.x && y == start.y && c_start != '|' && c_start != 'F' && c_start != 'L');
       break;
     case 'L':
-      return (x < start.x && y == start.y) || (y > start.y && x == start.x && c_start != '-');
+      return (x < start.x && y == start.y && c_start != '|' && c_start != 'F' && c_start != c_next) || 
+             (y > start.y && x == start.x && c_start != '-' && c_start != 'J' && c_start != c_next);
       break;
     case 'J':
-      return (x > start.x && y == start.y) || (y > start.y && x == start.x && c_start != '-');
+      return (x > start.x && y == start.y && c_start != '|' && c_start != '7' && c_start != c_next) || 
+             (y > start.y && x == start.x && c_start != '-' && c_start != 'L' && c_start != c_next);
       break;
     case '7':
-      return (x > start.x && y == start.y && c_start != '|') || (y < start.y && x == start.x);
+      return (x > start.x && y == start.y && c_start != '|' && c_start != 'J' && c_start != c_next) || 
+             (y < start.y && x == start.x && c_start != '-' && c_start != 'F' && c_start != c_next);
       break;
     case 'F':
-      return (y < start.y && x == start.x && c_start != '|') || (y == start.y && x < start.x);
+      return (y < start.y && x == start.x && c_start != '-' && c_start != '7' && c_start != c_next) || 
+             (y == start.y && x < start.x && c_start != '|' && c_start != 'L' && c_start != c_next);
       break;
     case 'S':
       return true;
@@ -144,16 +150,18 @@ int main (int argc, char ** argv) {
   if (is_traversible(grid,origin, east))
     dirs.push_back(east);
 
+  //prev = origin;
   coord prev0 = origin;
   coord prev1 = origin;
-  ++part1;
+  //curr = travel(grid, dirs[0], prev);
   coord dir0 = dirs[0];
   coord dir1 = dirs[1];
+  ++part1;
   while (dir0 != dir1) {
     //print_grid(grid, dir0, dir1);
+    //curr = travel(grid, curr, prev);
     dir0 = travel(grid, dir0, prev0);
     dir1 = travel(grid, dir1, prev1);
-    
     ++part1;
 
   } 
